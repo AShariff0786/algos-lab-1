@@ -13,6 +13,7 @@ public class Robbery {
 		int[] worths
 	) {
 		// fill in here, change the return
+		int numItems= sizes.length;
 			return 0;
 	}
 

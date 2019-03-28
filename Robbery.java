@@ -18,12 +18,16 @@ public class Robbery {
 	// Using DP: Get the maximum value with capacity C and n items
 	public int maximizeRobWorthRecur(int capacity, int[] sizes, int[] worths, int length) {
 		// fill in here, change the return
+	   //if there's only one thing left in the sizes array and it can fit in the bag, then add it
 	   if(length==1 && sizes[0]<=capacity) {
 	      return worths[0];
 	   }
-	   int weight=sizes[sizes.length-1];
+	   //else we leave the item
+	   if(length==1 && sizes[0] > capacity)
+	      return 0;
+	   int weight= sizes[length]; //weight of item being considered to add to the bag
 	   if(weight<=capacity) {
-	      return worths[sizes.length-1] + maximizeRobWorthRecur((capacity-weight), sizes, worths, length-1); 
+	      return max(maximizeRobWorthRecur(capacity, sizes, worths, length-1), maximizeRobWorthRecur((capacity - sizes[length]), sizes, worths, length -1 ) + worths[length]); 
 	   }
 	   else
 	      return maximizeRobWorthRecur(capacity, sizes, worths, length-1);
@@ -32,7 +36,7 @@ public class Robbery {
 	public int maximizeRobWorthBottomUp(int capacity, int[] sizes, int[] worths) {
 		// fill in here, change the return
 	   int max=0;
-      int [][] memoarr=new int[sizes.length+1][capacity+1];
+      int [][] memoarr=new int[sizes.length+1][capacity+1]; //There is one extra row and col, because there is a row and col of zeros that helps set up boundaries
       for(int i=1; i<=sizes.length; i++) {
         for(int j=1; j<=capacity; j++) {
           if(sizes[i-1]<= j) {
@@ -61,8 +65,8 @@ public class Robbery {
 		int bagCapacity = 40;
 		int[] itemSizes = {2, 25, 6, 13, 1, 15, 8, 5, 17, 4};
 		int[] itemWorths = {35, 120, 900, 344, 29, 64, 67, 95, 33, 10};
-
-		int maxWorthRecur = r.maximizeRobWorthRecur(bagCapacity, itemSizes, itemWorths, itemSizes.length);
+		//I added itemSizes.length-1 so I could consider adding the last item  into the bag, so this will decrement by one 
+		int maxWorthRecur = r.maximizeRobWorthRecur(bagCapacity, itemSizes, itemWorths, itemSizes.length-1); 
 		System.out.println("Max worth of the bag: " + maxWorthRecur);
 		int maxWorthBottomUp = r.maximizeRobWorthBottomUp(bagCapacity, itemSizes, itemWorths);
 		System.out.println("Max worth of the bag: " + maxWorthBottomUp);
